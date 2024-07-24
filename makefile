@@ -13,3 +13,6 @@ all: $(OBJECTS)
 clean:
 	rm -f $(OBJECTS) main
 
+run: all
+	./main.out
+
