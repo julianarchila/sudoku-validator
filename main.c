@@ -1,17 +1,24 @@
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-int sudoku[9][9] = {
-    {5, 3, 4, 6, 7, 8, 9, 1, 2}, //
-    {6, 7, 2, 1, 9, 5, 3, 4, 8}, //
-    {1, 9, 8, 3, 4, 2, 5, 6, 7}, //
-    {8, 5, 9, 7, 6, 1, 4, 2, 3}, //
-    {4, 2, 6, 8, 5, 3, 7, 9, 1}, //
-    {7, 1, 3, 9, 2, 4, 8, 5, 6}, //
-    {9, 6, 1, 5, 3, 7, 2, 8, 4}, //
-    {2, 8, 7, 4, 1, 9, 6, 3, 5}, //
-    {3, 4, 5, 2, 8, 6, 1, 7, 9}  //
-};
+int sudoku[9][9];
+
+void leerSudoku(char *fileName, int sudoku[9][9]) {
+  FILE *fp;
+  int i, j;
+  fp = fopen(fileName, "r");
+  if (fp == NULL) {
+    printf("Error al abrir el archivo\n");
+    exit(1);
+  }
+  for (i = 0; i < 9; i++) {
+    for (j = 0; j < 9; j++) {
+      fscanf(fp, "%d", &sudoku[i][j]);
+    }
+  }
+  fclose(fp);
+}
 
 void imprimirSudoku(int sudoku[9][9]);
 
@@ -103,6 +110,13 @@ void validarSubCuadros(void *arg) {
 }
 
 int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    printf("Debes especificar el nombre del archivo\n");
+    exit(1);
+  }
+
+  char *fileName = argv[1];
+  leerSudoku(fileName, sudoku);
   imprimirSudoku(sudoku);
   DatosHilo datosColumnas = {&sudoku, 1};
   DatosHilo datosFilas = {&sudoku, 1};
